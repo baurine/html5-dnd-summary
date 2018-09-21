@@ -17,11 +17,30 @@ export default class Draggable extends React.Component {
     }
   }
 
+  getItemClassName = (item) => {
+    let className = ['row']
+    if (item.id === this.state.draggedId) {
+      className.push('in-drag')
+    }
+    return className.join(' ')
+  }
+
+  handleDragStart = (item) => {
+    this.setState({draggedId: item.id})
+  }
+  
+  handleDragEnd = () => {
+    this.setState({draggedId: null})
+  }
+
   renderItem = (item) => {
     return (
-      <div className='row'
+      <div className={this.getItemClassName(item)}
            key={item.id}
-           draggable={true}>
+           draggable={true}
+           onDragStart={()=>this.handleDragStart(item)}
+           onDragEnd={this.handleDragEnd}
+           >
            <h1>{item.title}</h1>
       </div>
     )
