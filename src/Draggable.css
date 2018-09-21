@@ -1,0 +1,17 @@
+.rows {
+  display: flex;
+  flex-direction: column;
+
+  width: 400px;
+  margin: 10px;
+}
+
+.row {
+  margin: 5px;
+
+  background-color: #ccc;
+  border: 2px solid #666;
+  border-radius: 10px;
+
+  cursor: move;
+}
