@@ -13,7 +13,8 @@ export default class Draggable extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      draggedId: null
+      draggedId: null,
+      dragOverId: null,
     }
   }
 
@@ -21,6 +22,9 @@ export default class Draggable extends React.Component {
     let className = ['row']
     if (item.id === this.state.draggedId) {
       className.push('in-drag')
+    }
+    if (item.id === this.state.dragOverId) {
+      className.push('drag-over')
     }
     return className.join(' ')
   }
@@ -30,7 +34,17 @@ export default class Draggable extends React.Component {
   }
   
   handleDragEnd = () => {
-    this.setState({draggedId: null})
+    // in practical, we don't need to handle this, we'll do it in onDrop
+    this.setState({draggedId: null, dragOverId: null})
+  }
+
+  handleDragEnter = (item) => {
+    this.setState({dragOverId: item.id})
+  }
+
+  handleDragLeave = () => {
+    // in practical, we don't need to handle this, we'll do it in onDrop or onDragEnd
+    // this.setState({dragOverId: null})
   }
 
   renderItem = (item) => {
@@ -40,6 +54,9 @@ export default class Draggable extends React.Component {
            draggable={true}
            onDragStart={()=>this.handleDragStart(item)}
            onDragEnd={this.handleDragEnd}
+
+           onDragEnter={()=>this.handleDragEnter(item)}
+           onDragLeave={this.handleDragLeave}
            >
            <h1>{item.title}</h1>
       </div>

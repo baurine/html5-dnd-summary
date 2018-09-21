@@ -19,3 +19,7 @@
 .row.in-drag {
   opacity: 0.4;
 }
+
+.row.drag-over {
+  border: 2px dashed #000;
+}
