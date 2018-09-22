@@ -29,22 +29,50 @@ export default class Draggable extends React.Component {
     return className.join(' ')
   }
 
-  handleDragStart = (item) => {
+  handleDragStart = (e, item) => {
+    console.log('drag start', item.id)
     this.setState({draggedId: item.id})
+    // make it work in firefox
+    e.nativeEvent.dataTransfer.setData('text', 'anything')
   }
-  
-  handleDragEnd = () => {
+
+  handleDrag = (e, item) => {
+    // console.log('drag', item.id)
+  }
+
+  handleDragEnd = (e, item) => {
+    console.log('drag end', item.id)
     // in practical, we don't need to handle this, we'll do it in onDrop
     this.setState({draggedId: null, dragOverId: null})
   }
 
-  handleDragEnter = (item) => {
+  handleDragEnter = (e, item) => {
+    console.log('drag enter', item.id)
     this.setState({dragOverId: item.id})
   }
 
-  handleDragLeave = () => {
+  handleDragOver = (e, item) => {
+    console.log('drag over', item.id)
+    // necessary, else onDrop won't be called
+    e.preventDefault()
+  }
+
+  handleDragExit = (e, item) => {
+    // called in firefox
+    console.log('drag exit', item.id)
+  }
+
+  handleDragLeave = (e, item) => {
+    console.log('drag leave', item.id)
     // in practical, we don't need to handle this, we'll do it in onDrop or onDragEnd
     // this.setState({dragOverId: null})
+  }
+
+  handleDrop = (e, item) => {
+    console.log('drop', item.id)
+    // for firefox, stop opening link automatically
+    e.preventDefault()
+    e.stopPropagation()
   }
 
   renderItem = (item) => {
@@ -52,13 +80,17 @@ export default class Draggable extends React.Component {
       <div className={this.getItemClassName(item)}
            key={item.id}
            draggable={true}
-           onDragStart={()=>this.handleDragStart(item)}
-           onDragEnd={this.handleDragEnd}
 
-           onDragEnter={()=>this.handleDragEnter(item)}
-           onDragLeave={this.handleDragLeave}
-           >
-           <h1>{item.title}</h1>
+           onDragStart={(e)=>this.handleDragStart(e, item)}
+           onDrag={(e)=>this.handleDrag(e, item)}
+           onDragEnd={(e)=>this.handleDragEnd(e, item)}
+
+           onDragEnter={(e)=>this.handleDragEnter(e, item)}
+           onDragOver={(e)=>this.handleDragOver(e, item)}
+           onDragExit={(e)=>this.handleDragExit(e, item)}
+           onDragLeave={(e)=>this.handleDragLeave(e, item)}
+           onDrop={(e)=>this.handleDrop(e, item)}>
+        <h1>{item.title}</h1>
       </div>
     )
   }
