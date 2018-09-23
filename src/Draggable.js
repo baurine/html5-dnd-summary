@@ -36,46 +36,47 @@ export default class Draggable extends React.Component {
   }
 
   handleDragStart = (e, item, index) => {
-    console.log('drag start', item.id)
+    console.log('drag start:', item.title)
     this.setState({draggedId: item.id, draggedIndex: index})
     // make it work in firefox
-    e.nativeEvent.dataTransfer.setData('text', 'https://www.google.com')
+    e.nativeEvent.dataTransfer.setData('text/plain', 'https://www.google.com')
+    e.nativeEvent.dataTransfer.effectAllowed = 'copy'
   }
 
   handleDrag = (e, item) => {
-    // console.log('drag', item.id)
+    // console.log('drag:', item.id)
   }
 
   handleDragEnd = (e, item) => {
-    console.log('drag end', item.id)
-    // in practical, we don't need to handle this, we'll do it in onDrop
+    console.log('drag end:', item.title)
     this.setState({draggedId: null, draggedIndex: null, dragOverId: null})
   }
 
   handleDragEnter = (e, item) => {
-    console.log('drag enter', item.id)
+    console.log('drag enter:', item.title)
     this.setState({dragOverId: item.id})
   }
 
   handleDragOver = (e, item) => {
-    console.log('drag over', item.id)
+    console.log('drag over:', item.title)
     // necessary, else onDrop won't be called
     e.preventDefault()
+    e.nativeEvent.dataTransfer.dropEffect = 'copy'
   }
 
   handleDragExit = (e, item) => {
     // called in firefox
-    console.log('drag exit', item.id)
+    console.log('drag exit:', item.title)
   }
 
   handleDragLeave = (e, item) => {
-    console.log('drag leave', item.id)
+    console.log('drag leave:', item.title)
     // in practical, we don't need to handle this, we'll do it in onDrop or onDragEnd
     // this.setState({dragOverId: null})
   }
 
   handleDrop = (e, item, index) => {
-    console.log('drop', item.id)
+    console.log('drop:', item.title)
     // for firefox, stop opening link automatically
     e.preventDefault()
 
