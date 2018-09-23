@@ -60,7 +60,7 @@
         // for firefox
         // e.dataTransfer.setData('text/plain', 'https://www.google.com')
         e.dataTransfer.setData('text/html', this.innerHTML)
-        e.dataTransfer.effectAllowed = 'link'
+        e.dataTransfer.effectAllowed = 'copyLink'
       }
 
       function handleDrag(e) {
@@ -70,6 +70,7 @@
       function handleDragEnd(e) {
         console.log('drag end:', e.target.id)
         // reset
+        dragSrcEl = null
         this.style.opacity = '';  // this / e.target is the source node.
         [].forEach.call(cols, function (col) {
           col.classList.remove('over');
@@ -88,11 +89,12 @@
 
         // See the section on the DataTransfer object.
         if (e.target.id === 'column-4') {
-          e.dataTransfer.dropEffect = 'copy';
-        } else {
+          e.dataTransfer.dropEffect = 'move';
+        } else if (e.target.id === 'column-3') {
           e.dataTransfer.dropEffect = 'link';
+        } else {
+          e.dataTransfer.dropEffect = 'copy';
         }
-        return false;
       }
 
       function handleDragExit(e) {
@@ -106,15 +108,15 @@
 
       function handleDrop(e) {
         console.log('drop:', e.target.id)
+        console.log(e.dataTransfer)
         // this / e.target is current target element.
         e.preventDefault() // stop the browser from redirection
         // See the section on the DataTransfer object.
-        if (dragSrcEl != this) {
+        if (dragSrcEl && dragSrcEl != this) {
           // swap
           dragSrcEl.innerHTML = this.innerHTML
           this.innerHTML = e.dataTransfer.getData('text/html')
         }
-        return false;
       }
 
       var cols = document.querySelectorAll('.columns .column');

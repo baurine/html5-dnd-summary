@@ -77,10 +77,11 @@ export default class Draggable extends React.Component {
 
   handleDrop = (e, item, index) => {
     console.log('drop:', item.title)
+    console.log(e.nativeEvent.dataTransfer)
     // for firefox, stop opening link automatically
     e.preventDefault()
 
-    if (index !== this.state.draggedIndex) {
+    if (this.state.draggedIndex && index !== this.state.draggedIndex) {
       // swap
       let newItemIds = Array.from(this.state.data.item_ids)
       newItemIds[index] = this.state.draggedId
