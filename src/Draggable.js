@@ -2,18 +2,24 @@ import React from 'react'
 
 import './Draggable.css'
 
-const ITEMS = [
-  {id: 1, title: 'A'},
-  {id: 2, title: 'B'},
-  {id: 3, title: 'C'},
-  {id: 4, title: 'D'}
-]
+const initialData = {
+  items: {
+    '1': {id: 1, title: 'A'},
+    '2': {id: 2, title: 'B'},
+    '3': {id: 3, title: 'C'},
+    '4': {id: 4, title: 'D'}
+  },
+  item_ids: ['1','2','3','4']
+}
 
 export default class Draggable extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      data: initialData,
+
       draggedId: null,
+      draggedIndex: null,
       dragOverId: null,
     }
   }
@@ -29,11 +35,11 @@ export default class Draggable extends React.Component {
     return className.join(' ')
   }
 
-  handleDragStart = (e, item) => {
+  handleDragStart = (e, item, index) => {
     console.log('drag start', item.id)
-    this.setState({draggedId: item.id})
+    this.setState({draggedId: item.id, draggedIndex: index})
     // make it work in firefox
-    e.nativeEvent.dataTransfer.setData('text', 'anything')
+    e.nativeEvent.dataTransfer.setData('text', 'https://www.google.com')
   }
 
   handleDrag = (e, item) => {
@@ -43,7 +49,7 @@ export default class Draggable extends React.Component {
   handleDragEnd = (e, item) => {
     console.log('drag end', item.id)
     // in practical, we don't need to handle this, we'll do it in onDrop
-    this.setState({draggedId: null, dragOverId: null})
+    this.setState({draggedId: null, draggedIndex: null, dragOverId: null})
   }
 
   handleDragEnter = (e, item) => {
@@ -68,20 +74,35 @@ export default class Draggable extends React.Component {
     // this.setState({dragOverId: null})
   }
 
-  handleDrop = (e, item) => {
+  handleDrop = (e, item, index) => {
     console.log('drop', item.id)
     // for firefox, stop opening link automatically
     e.preventDefault()
-    e.stopPropagation()
+
+    if (index !== this.state.draggedIndex) {
+      // swap
+      let newItemIds = Array.from(this.state.data.item_ids)
+      newItemIds[index] = this.state.draggedId
+      newItemIds[this.state.draggedIndex] = item.id
+      const newState = {
+        ...this.state,
+        data: {
+          ...this.state.data,
+          item_ids: newItemIds
+        }
+      }
+      this.setState(newState)
+    }
   }
 
-  renderItem = (item) => {
+  renderItem = (item_id, index) => {
+    const item = this.state.data.items[item_id]
     return (
       <div className={this.getItemClassName(item)}
            key={item.id}
            draggable={true}
 
-           onDragStart={(e)=>this.handleDragStart(e, item)}
+           onDragStart={(e)=>this.handleDragStart(e, item, index)}
            onDrag={(e)=>this.handleDrag(e, item)}
            onDragEnd={(e)=>this.handleDragEnd(e, item)}
 
@@ -89,7 +110,7 @@ export default class Draggable extends React.Component {
            onDragOver={(e)=>this.handleDragOver(e, item)}
            onDragExit={(e)=>this.handleDragExit(e, item)}
            onDragLeave={(e)=>this.handleDragLeave(e, item)}
-           onDrop={(e)=>this.handleDrop(e, item)}>
+           onDrop={(e)=>this.handleDrop(e, item, index)}>
         <h1>{item.title}</h1>
       </div>
     )
@@ -98,7 +119,7 @@ export default class Draggable extends React.Component {
   render() {
     return (
       <div className='rows'>
-        { ITEMS.map(this.renderItem) }
+        { this.state.data.item_ids.map(this.renderItem) }
       </div>
     )
   }
