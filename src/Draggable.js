@@ -81,7 +81,7 @@ export default class Draggable extends React.Component {
     // for firefox, stop opening link automatically
     e.preventDefault()
 
-    if (this.state.draggedIndex && index !== this.state.draggedIndex) {
+    if (this.state.draggedIndex !== null && index !== this.state.draggedIndex) {
       // swap
       let newItemIds = Array.from(this.state.data.item_ids)
       newItemIds[index] = this.state.draggedId
