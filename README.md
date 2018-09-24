@@ -6,7 +6,7 @@ Summary for implementing drag and drop by native and react.
 
 ![](./art/demo.gif)
 
-Drag and Drop Life Cycle:
+## Drag and Drop Life Cycle
 
 ![](./art/life-cycle.png)
 

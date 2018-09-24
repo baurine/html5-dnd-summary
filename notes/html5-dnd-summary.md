@@ -10,7 +10,7 @@
 
 ![](../art/demo.gif)
 
-Drag and Drop Life Cycle:
+## Drag and Drop Life Cycle
 
 ![](../art/life-cycle.png)
 
@@ -175,7 +175,7 @@ onDragEnd              |                        |
 
 如果只是在同一个页面内操作，实际上是可以的，像用 React 实现时，我们就必须放在 state 中。
 
-但是 HTML5 的 Drag and Drop API 是支持从网页中拖拽到桌面，或是从桌面拖拽到网页中的，这个时候，全局变量的方法就不可行的，我想这是为什么需要 dataTransfer 的原因。而 Firefox 也强制你必须在 onDragStart 中往 dataTransfer 中设置 data，即使是在同一个页面内拖拽，否则认为你不是真的想要拖拽 (没数据你拖拽啥)，从来导致拖拽不可用，所以一般这时候我们就会随便往 dataTransfer 中赋一些值，Chrome 没有这个要求。
+但是 HTML5 的 Drag and Drop API 是支持从网页中拖拽到桌面，或是从桌面拖拽到网页中的，这个时候，全局变量的方法就不可行的，我想这是为什么需要 dataTransfer 的原因。而 Firefox 也强制你必须在 onDragStart 中往 dataTransfer 中设置 data，即使是在同一个页面内拖拽，否则认为你不是真的想要拖拽 (没数据你拖拽啥)，从而导致拖拽不可用，所以一般这时候我们就会随便往 dataTransfer 中赋一些值，Chrome 没有这个要求。
 
 因为支持从桌面拖拽到网页，所以在上面第一个例子的 onDrop 事件中，可能存在 dragSrcEl 为 null 的情况，我们要加上判断以增强程序的健壮性。
 
@@ -206,7 +206,7 @@ onDragEnd              |                        |
 
 ![](../art/drop-file-chrome.png)
 
-这种情况下，没有 onDragStart/onDrag/onDragEnd 事件，只有 onDragEnter/onDragOver/onDragLeave|onDrop 事件。
+这种情况下，没有 onDragStart/onDrag/onDragEnd 事件，只有 onDragEnter/onDragOver/onDragLeave 或 onDrop 事件。
 
 但 Firefox 和 Chrome 上 dataTransfer 的值不一样，需要做兼容性处理。
 
